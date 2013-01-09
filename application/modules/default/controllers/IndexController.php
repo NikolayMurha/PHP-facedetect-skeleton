@@ -270,6 +270,7 @@ class Default_IndexController extends Zend_Controller_Action
             $table = ob_get_clean();
             file_put_contents($file.'.html', $table);
         }
+        die;
     }
 }
 
