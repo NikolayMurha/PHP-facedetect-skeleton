@@ -221,7 +221,7 @@ class Default_IndexController extends Zend_Controller_Action
             $this->getHelper('layout')->disableLayout();
             $this->getHelper('viewRenderer')->setNoRender(true);
             $pathinfo = pathinfo($file);
-            $statistic[] = array(
+            $statistic = array(
                 'file' => $pathinfo['basename'],
                 'detections' => $detections
             );
@@ -240,8 +240,12 @@ class Default_IndexController extends Zend_Controller_Action
             if (strpos($file, 'html')) {
                 continue;
             }
-            ob_start();
             $fileCnt = unserialize(file_get_contents($file));
+            if (isset($fileCnt[0])) {
+                $fileCnt = $fileCnt[0];
+            }
+            ob_start();
+
             print '<table>';
             print '<th colspan="30">'.$fileCnt['file'].'</th>';
             $head = 0;
@@ -252,7 +256,6 @@ class Default_IndexController extends Zend_Controller_Action
                     }
 
                     print '<td>'.$faceCascade.' '.$faceElement.'</td>';
-
                     foreach($dimetions as $w=>$count) {
                         if (!$head) {
                             print '<td>'.$w.'</td>';
