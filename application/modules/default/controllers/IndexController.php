@@ -230,5 +230,40 @@ class Default_IndexController extends Zend_Controller_Action
             file_put_contents($tmp, serialize($statistic));
         }
     }
+
+    public function reportAction() {
+        $filePart = sys_get_temp_dir().'/statistic_*';
+        $files = glob($filePart);
+
+
+        foreach($files as $file) {
+            ob_start();
+            $fileCnt = unserialize(file_get_contents($file));
+            print '<table>';
+            print '<th colspan="30">'.$fileCnt['file'].'</th>';
+            $head = 0;
+            foreach($fileCnt['detections'] as $faceCascade => $elements) {
+                foreach($elements as $faceElement => $dimetions) {
+                    if (!$head) {
+                        print '<td> </td>';
+                    }
+
+                    print '<td>'.$faceCascade.' '.$faceElement.'</td>';
+
+                    foreach($dimetions as $w=>$count) {
+                        if (!$head) {
+                            print '<td>'.$w.'</td>';
+                            $head = 1;
+                        }
+                        print '<td>'.$count.'</td>';
+                    }
+                }
+            }
+
+            print '</table>';
+            $table = ob_get_clean();
+            file_put_contents($file.'.html', $table);
+        }
+    }
 }
 
