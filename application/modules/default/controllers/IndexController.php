@@ -261,7 +261,7 @@ class Default_IndexController extends Zend_Controller_Action
                             print '<td>'.$w.'</td>';
                             $head = 1;
                         }
-                        print '<td>'.$count.'</td>';
+                        print '<td>'.count($count).'</td>';
                     }
                 }
             }
