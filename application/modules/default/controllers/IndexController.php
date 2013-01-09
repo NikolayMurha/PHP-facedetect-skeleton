@@ -234,9 +234,12 @@ class Default_IndexController extends Zend_Controller_Action
     public function reportAction() {
         $filePart = sys_get_temp_dir().'/statistic_*';
         $files = glob($filePart);
-
+        print_r($files);
 
         foreach($files as $file) {
+            if (strpos($file, 'html')) {
+                continue;
+            }
             ob_start();
             $fileCnt = unserialize(file_get_contents($file));
             print '<table>';
