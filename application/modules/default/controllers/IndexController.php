@@ -191,7 +191,7 @@ class Default_IndexController extends Zend_Controller_Action
         $newIm = imagecreatetruecolor(round($w*$ratio), round($h*$ratio));
         imagecopyresampled($newIm, $img, 0, 0, 0, 0, round($w*$ratio), round($h*$ratio), $w, $h);
 
-        $tmp = tempnam(sys_get_temp_dir(), 'ir').'.jpg';
+        $tmp = tempnam(sys_get_temp_dir(), 'ir');
         imagepng($newIm, $tmp);
         return $tmp;
     }
