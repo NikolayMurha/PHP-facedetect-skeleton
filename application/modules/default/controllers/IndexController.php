@@ -250,6 +250,7 @@ class Default_IndexController extends Zend_Controller_Action
             print '<th colspan="30">'.$fileCnt['file'].'</th>';
             $head = 0;
             foreach($fileCnt['detections'] as $faceCascade => $elements) {
+                print '<tr>';
                 foreach($elements as $faceElement => $dimetions) {
                     if (!$head) {
                         print '<td> </td>';
@@ -264,6 +265,7 @@ class Default_IndexController extends Zend_Controller_Action
                         print '<td>'.count($count).'</td>';
                     }
                 }
+                print '</tr>';
             }
 
             print '</table>';
