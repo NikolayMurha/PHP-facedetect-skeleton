@@ -242,7 +242,7 @@ class Default_IndexController extends Zend_Controller_Action
             }
             $fileCnt = unserialize(file_get_contents($file));
             if (isset($fileCnt[0])) {
-                $fileCnt = $fileCnt[0];
+                list($fileCnt) = array_splice($fileCnt, -1);
             }
             ob_start();
 
