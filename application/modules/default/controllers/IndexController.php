@@ -193,41 +193,53 @@ class Default_IndexController extends Zend_Controller_Action
 
         $tmp = tempnam(sys_get_temp_dir(), 'ir');
         imagepng($newIm, $tmp);
+        imagedestroy($img);
+        imagedestroy($newIm);
         return $tmp;
     }
 
     public function testAction() {
-         ini_set('display_errors', true);
-         error_reporting(E_ALL);
+        $this->getHelper('layout')->disableLayout();
+        $this->getHelper('viewRenderer')->setNoRender(true);
+
+        ini_set('display_errors', true);
+        error_reporting(E_ALL);
+
         $cascadePath = '/usr/local/share/OpenCV/haarcascades/';
-        $statistic = array();
+
         $file = APPLICATION_PATH.'/../public/images/random/*.jpg';
         $files = glob($file);
 
         foreach($files as $file) {
-            $detections = array();
+            $rows = array(
+                0 => array( '', '' )//row 0 - header
+            );
+
             for($i = 800; $i <= 1200; $i += 100) {
                 $newFile = $this->_resize($file, $i, 0);
+                $rows[0][] = $i; //add width to header
 
+                $row = 1;
                 foreach($this->faceCascades AS $faceCascade) {
                     foreach($this->faceElementsCascades AS $faceElement) {
-                        $detections[$faceCascade][$faceElement][$i] = face_detect($newFile, $cascadePath.$faceCascade, $cascadePath.$faceElement);
-                    }
+                        if (!isset($rows[$row])) {
+                            $rows[$row] = array($faceCascade, $faceElement); // add first elements
+                        }
 
+                        $rows[] = face_detect($newFile, $cascadePath.$faceCascade, $cascadePath.$faceElement);
+                        $row ++;
+                    }
                 }
+                unlink($newFile);
             }
 
             flush();
-            $this->getHelper('layout')->disableLayout();
-            $this->getHelper('viewRenderer')->setNoRender(true);
-            $pathinfo = pathinfo($file);
-            $statistic = array(
-                'file' => $pathinfo['basename'],
-                'detections' => $detections
-            );
-
+            $pathInfo = pathinfo($file);
             $tmp = tempnam(sys_get_temp_dir(), 'statistic_');
-            file_put_contents($tmp, serialize($statistic));
+            file_put_contents($tmp, serialize(array(
+                'file' => $pathInfo['basename'],
+                'detections' => $rows
+            )));
         }
     }
 
