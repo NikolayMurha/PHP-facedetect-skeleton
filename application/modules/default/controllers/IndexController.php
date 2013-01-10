@@ -215,7 +215,7 @@ class Default_IndexController extends Zend_Controller_Action
                 0 => array( '', '' )//row 0 - header
             );
 
-            for($i = 800; $i <= 1200; $i += 100) {
+            for($i = 500; $i <= 1200; $i += 100) {
                 $newFile = $this->_resize($file, $i, 0);
                 $rows[0][] = $i; //add width to header
 
