@@ -226,7 +226,7 @@ class Default_IndexController extends Zend_Controller_Action
                             $rows[$row] = array($faceCascade, $faceElement); // add first elements
                         }
 
-                        $rows[] = face_detect($newFile, $cascadePath.$faceCascade, $cascadePath.$faceElement);
+                        $rows[$row][] = face_detect($newFile, $cascadePath.$faceCascade, $cascadePath.$faceElement);
                         $row ++;
                     }
                 }
