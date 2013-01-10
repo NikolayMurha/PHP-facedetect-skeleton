@@ -1,3 +1,3 @@
 {foreach $images as $image}
-    <img src="{$image}" alt="" width="400" />
+    <img src="{$image}" alt="" />
 {/foreach}

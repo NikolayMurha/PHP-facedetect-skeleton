@@ -29,7 +29,7 @@ class Default_IndexController extends Zend_Controller_Action
 
     public function init()
     {
-        $this->signer = new HTTP_UrlSigner("very-secret-word",'/default/index/resize/*');
+        $this->signer = new HTTP_UrlSigner("very-secret-word",'/default/index/crop/*');
     }
 
     public function generateAction() {
@@ -59,29 +59,41 @@ class Default_IndexController extends Zend_Controller_Action
     {
         // Get Contents from flickr
 
-        /*$resizer = new HTTP_ImageResizer($this->signer, null);
-        $paramsToPassToProcessor = array(
-            "height" => 500,
-            "width" => 127,
-            'fit' => 0,
-            'crop' => 1,
-            'format' => 'jpeg',
-            'quality' => 100,
-            'image' => 'sample3.jpg'
-        );
-        */
+
         $images = array();
         $file = APPLICATION_PATH.'/../public/images/random/*.jpg';
         $files = glob($file);
 
+        $resizer = new HTTP_ImageResizer($this->signer, null);
+
         foreach($files as $file) {
             $file = basename($file);
-            $images[] = '/default/index/resize/?width=900&file='.$file;
+
+            $paramsToPassToProcessor = array(
+                "height" => 500,
+                "width" => 127,
+                'fit' => 0,
+                'crop' => 1,
+                'format' => 'jpeg',
+                'quality' => 100,
+                'image' => $file
+            );
+            $images[] =  $resizer->getUrl($paramsToPassToProcessor);;
         }
 
-        shuffle($images);
-        $this->view->images = $images;//$resizer->getUrl($paramsToPassToProcessor);
+        $this->view->images = $images;//
+    }
 
+    public function cropAction() {
+        $this->getHelper('layout')->disableLayout();
+        $this->getHelper('viewRenderer')->setNoRender(true);
+
+        $resizer = new HTTP_ImageResizer($this->signer, function ($params) {
+            $file = 'images/random/' . $params['image'];
+            return file_get_contents($file);
+        });
+
+        $resizer->main($_SERVER['REQUEST_URI']);
     }
 
     public function resizeAction()
@@ -258,7 +270,6 @@ class Default_IndexController extends Zend_Controller_Action
                     @$histogram[$cellname] += is_array($cell) ? count($cell) : $cell;
                 }
             }
-
         }
         $this->view->files = $filesArr;
         $this->view->histogram = $histogram;

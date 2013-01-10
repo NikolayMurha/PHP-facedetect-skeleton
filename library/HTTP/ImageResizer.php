@@ -109,13 +109,6 @@ class HTTP_ImageResizer
     {
 
         list($newW, $newH) = $this->_calculate($image, $request);
-
-        /*
-            print '<div class="box" style="width:' . $request['width'] . 'px;height:' . $request['width'] . 'px"></div>';
-            print '<div class="box2" style="width:' . $newW . 'px;height:' . $newH . 'px"></div>';
-            print '<div class="image" style="width:' . $image->width. 'px;height:' . $image->height . 'px"></div>';
-        */
-
         // Resize
         $newIm = imagecreatetruecolor($newW, $newH);
         imagecopyresampled($newIm, $image->data, 0, 0, 0, 0, $newW, $newH, $image->width, $image->height);
@@ -128,8 +121,7 @@ class HTTP_ImageResizer
         $x = (imagesx($canvas) - $image->width) / 2;
         $y = (imagesy($canvas) - $image->height) / 2;
 
-        fb::send('$x=' . $x);
-        fb::send('$y=' . $y);
+
 
         imagecopy($canvas, $image->data, $x, $y, 0, 0, $image->width, $image->height);
         $image->data = $canvas;
@@ -179,13 +171,10 @@ class HTTP_ImageResizer
     protected function _createCanvas($image, $request) {
         $res = imagecreatetruecolor($request['width'], $request['height']);
         $bg = !empty($request['bg']) ? $request['bg'] : false;
-        fb::send($bg);
 
         if ($bg != false && $bg !== 'transparent') {
-            fb::send('color');
             $rgb = sscanf(preg_replace('/#/', '', $request['bg']), '%2x%2x%2x');
             $color = imagecolorallocate($res, $rgb[0], $rgb[1], $rgb[2]);
-            fb::send($color);
         } elseif (($bg === 'transparent' || $bg === false)
             && ($request['format'] == 'gif' || $request['format'] == 'png')
         ) {
@@ -243,7 +232,13 @@ class HTTP_ImageResizer
         $left_entropy = $right_entropy = $top_entropy = $bottom_entropy = 0;
         $right = $image->width;
         $bottom = $image->height;
-
+        fb::info(array(
+            '$right_entropy' => $right_entropy,
+            '$left_entropy' => $left_entropy,
+            '$right' => $right,
+            '$left' => $left,
+            '$right - $left' =>  $right - $left,
+        ));
         // Slice from left and right edges until the correct width is reached.
         while ($dx) {
             $slice = min($dx, 10);
@@ -255,7 +250,15 @@ class HTTP_ImageResizer
             if (!$right_entropy) {
                 $right_entropy = $this->_entropySlice($image, $right - $slice, $top, $slice, $image->height);
             }
+            fb::info(array(
+                '$slice' => $slice,
+                '$right_entropy' => $right_entropy,
+                '$left_entropy' => $left_entropy,
+                '$right' => $right,
+                '$left' => $left,
+                '$dx' => $dx,
 
+            ));
             // Remove the lowest entropy slice.
             if ($left_entropy >= $right_entropy) {
                 $right -= $slice;
@@ -292,6 +295,13 @@ class HTTP_ImageResizer
             $dy -= $slice;
         }
 
+        fb::info(array(
+            'width' => $image->width,
+            '$left' => $left,
+            '$right' => $right,
+            '$right - $left' => $right - $left,
+            '$bottom - $top' => $bottom - $top,
+        ));
         // Finally, crop the image using the coordinates found above.
         $cropped_image = $this->_createCanvas($image, array( 'width' => $right - $left, 'height'=> $bottom - $top, 'format'=> 'jpeg' ));
         imagecopy($cropped_image, $image->data, 0, 0, $left, $top, $right - $left, $bottom - $top);
