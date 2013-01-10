@@ -1,9 +1,9 @@
 {foreach $files as $file}
 
-    <table>
+    <table style="background: #fff">
         <tr>
-            <th colspan="20">
-                {$file.file}
+            <th colspan="20" style="text-align: left">
+                {$file.file}<br>
                 <img src="/images/random/{$file.file}" width="200" />
             </th>
         </tr>
