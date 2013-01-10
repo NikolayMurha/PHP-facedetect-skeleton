@@ -1,7 +1,7 @@
 <div class="pr" style="height: 400px">
 {foreach $histogram as $value}
 <div class="fl"></div>
-    <div class="pa" style="left:{$value@iteration*50};width:25px;height: {$value}px"></div>
+    <div class="pa" style="left:{$value@iteration*50};width:25px;height: {$value}px;border: 1px solid #FF0000"></div>
 {/foreach}
 </div>
 
