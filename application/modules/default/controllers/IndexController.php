@@ -76,7 +76,7 @@ class Default_IndexController extends Zend_Controller_Action
 
         foreach($files as $file) {
             $file = basename($file);
-            $images[] = '/default/index/resize/?width=1000&file='.$file;
+            $images[] = '/default/index/resize/?width=900&file='.$file;
         }
 
         shuffle($images);
@@ -132,7 +132,7 @@ class Default_IndexController extends Zend_Controller_Action
         * haarcascade_mcs_upperbody.xml
         * haarcascade_upperbody.xml
         */
-        $faces = face_detect($tmp, "/usr/local/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml", "/usr/local/share/OpenCV/haarcascades/haarcascade_eye_tree_eyeglasses.xml", false );
+        $faces = face_detect($tmp, "/usr/local/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml", "/usr/local/share/OpenCV/haarcascades/haarcascade_eye.xml", true );
 
         if (!$faces) {
             $faces = array();
