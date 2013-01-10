@@ -238,7 +238,7 @@ class Default_IndexController extends Zend_Controller_Action
             $tmp = tempnam(sys_get_temp_dir(), 'statistic_');
             file_put_contents($tmp, serialize(array(
                 'file' => $pathInfo['basename'],
-                'detections' => $rows
+                'rows' => $rows
             )));
         }
     }
@@ -246,47 +246,12 @@ class Default_IndexController extends Zend_Controller_Action
     public function reportAction() {
         $filePart = sys_get_temp_dir().'/statistic_*';
         $files = glob($filePart);
-        print_r($files);
-
+        $filesArr = array();
         foreach($files as $file) {
-            if (strpos($file, 'html')) {
-                continue;
-            }
-            $fileCnt = unserialize(file_get_contents($file));
-            if (isset($fileCnt[0])) {
-                list($fileCnt) = array_splice($fileCnt, -1);
-            }
-            ob_start();
-
-            print '<table>';
-            print '<th colspan="30">'.$fileCnt['file'].'</th>';
-            $head = 0;
-            foreach($fileCnt['detections'] as $faceCascade => $elements) {
-
-                foreach($elements as $faceElement => $dimetions) {
-                    print '<tr>';
-                    if (!$head) {
-                        print '<td> </td>';
-                    }
-
-                    print '<td>'.$faceCascade.' '.$faceElement.'</td>';
-                    foreach($dimetions as $w=>$count) {
-                        if (!$head) {
-                            print '<td>'.$w.'</td>';
-                            $head = 1;
-                        }
-                        print '<td>'.count($count).'</td>';
-                    }
-                    print '</tr>';
-                }
-
-            }
-
-            print '</table>';
-            $table = ob_get_clean();
-            file_put_contents($file.'.html', $table);
+            $filesArr[] = unserialize(file_get_contents($file));
         }
-        die;
+
+        $this->view->files = $filesArr;
     }
 }
 
