@@ -1,3 +1,16 @@
+
+.pa {
+    position: absolute;
+}
+
+.pr {
+    position: relative;
+}
+.clear {
+    clear: both;
+}
+
+
 body {
     background: url(/images/bg.png);
 }

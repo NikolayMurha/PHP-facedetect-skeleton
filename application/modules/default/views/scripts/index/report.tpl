@@ -1,3 +1,11 @@
+<div class="pr" style="height: 400px">
+{foreach $histogram as $value}
+<div class="fl"></div>
+    <div class="pa" style="left:{$value@iteration*50};width:25px;height: {$value}px"></div>
+{/foreach}
+</div>
+
+<div class="clear"></div>
 {foreach $files as $file}
 
     <table style="background: #fff">
