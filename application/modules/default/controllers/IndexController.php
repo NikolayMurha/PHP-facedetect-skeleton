@@ -247,10 +247,22 @@ class Default_IndexController extends Zend_Controller_Action
         $filePart = realpath(APPLICATION_PATH.'/../data/reports').'/statistic_*';
         $files = glob($filePart);
         $filesArr = array();
+        $histogram = array();
         foreach($files as $file) {
-            $filesArr[] = unserialize(file_get_contents($file));
+            $fileStats = unserialize(file_get_contents($file));
+            foreach($fileStats as $file) {
+                foreach($file['rows'] as $row) {
+                    foreach($row as $cellname=>$cell) {
+                        $histogram[$cellname] += is_array($cell) ? count($cell) : $cell;
+                    }
+                }
+            }
         }
+        print '<pre style="text-align:left">';
+        print_r($histogram);
+        print '</pre>';
         $this->view->files = $filesArr;
+        $this->view->histogram = $histogram;
     }
 }
 

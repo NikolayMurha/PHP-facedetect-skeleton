@@ -19,6 +19,7 @@
                 </td>
             {/foreach}
         </tr>
+
     {/foreach}
     </table>
 {/foreach}
