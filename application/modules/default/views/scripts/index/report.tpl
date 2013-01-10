@@ -1,8 +1,8 @@
 <div class="pr" style="height: 400px">
-{foreach $histogram as $value}
+{foreach $histogram as $key=>$value}
 <div class="fl"></div>
     <div class="pa" style="left:{$value@iteration*50}px; bottom: 0; width:25px;height: {$value}px;border: 1px solid {cycle values="#aaaaaa,#bbbbbb"}">
-        {$value}
+        {$key}px = {$value}
     </div>
 {/foreach}
 </div>
