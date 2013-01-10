@@ -251,14 +251,14 @@ class Default_IndexController extends Zend_Controller_Action
         foreach($files as $file) {
             $fileStats = unserialize(file_get_contents($file));
             $filesArr[] = $fileStats;
-
-            foreach($fileStats as $f) {
-                foreach($f['rows'] as $row) {
-                    foreach($row as $cellname=>$cell) {
-                        $histogram[$cellname] += is_array($cell) ? count($cell) : $cell;
-                    }
+            list($hader) = array_splice($fileStats['rows'], 0, 1);
+            foreach($fileStats['rows'] as $i => $row) {
+                foreach($row as $cellIndex => $cell) {
+                    $cellname = $hader[$cellIndex];
+                    $histogram[$cellname] += is_array($cell) ? count($cell) : $cell;
                 }
             }
+
         }
         print '<pre style="text-align:left">';
         print_r($histogram);
