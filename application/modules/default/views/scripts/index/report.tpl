@@ -3,11 +3,13 @@
     {foreach $file.rows as $row}
         <tr>
             {foreach $row as $cell}
-                {if $cell|@is_array}
-                    {$cell|@count}
-                {else}
-                    {$cell}
-                {/if}
+                <td>
+                    {if $cell|@is_array}
+                        {$cell|@count}
+                    {else}
+                        {$cell}
+                    {/if}
+                </td>
             {/foreach}
         </tr>
     {/foreach}
