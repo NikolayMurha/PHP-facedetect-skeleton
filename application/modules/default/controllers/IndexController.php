@@ -235,7 +235,7 @@ class Default_IndexController extends Zend_Controller_Action
 
             flush();
             $pathInfo = pathinfo($file);
-            $tmp = tempnam(sys_get_temp_dir(), 'statistic_');
+            $tmp = tempnam(realpath(APPLICATION_PATH.'/../data/reports'), 'statistic_');
             file_put_contents($tmp, serialize(array(
                 'file' => $pathInfo['basename'],
                 'rows' => $rows
@@ -244,7 +244,7 @@ class Default_IndexController extends Zend_Controller_Action
     }
 
     public function reportAction() {
-        $filePart = sys_get_temp_dir().'/statistic_*';
+        $filePart = realpath(APPLICATION_PATH.'/../data/reports').'/statistic_*';
         $files = glob($filePart);
         $filesArr = array();
         foreach($files as $file) {
