@@ -250,6 +250,10 @@ class Default_IndexController extends Zend_Controller_Action
         $histogram = array();
         foreach($files as $file) {
             $fileStats = unserialize(file_get_contents($file));
+            $filesArr[] = $fileStats;
+            print '<pre style="text-align:left">';
+            print_r($fileStats);
+            print '</pre>';
             foreach($fileStats as $file) {
                 foreach($file['rows'] as $row) {
                     foreach($row as $cellname=>$cell) {
