@@ -1,6 +1,6 @@
 {foreach $files as $file}
     <table>
-    {foreach $rows as $row}
+    {foreach $files.rows as $row}
         <tr>
             {foreach $row as $cell}
                 {if $cell|@is_array}

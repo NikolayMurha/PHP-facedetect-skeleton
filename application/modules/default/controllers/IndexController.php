@@ -250,9 +250,6 @@ class Default_IndexController extends Zend_Controller_Action
         foreach($files as $file) {
             $filesArr[] = unserialize(file_get_contents($file));
         }
-        print '<pre style="text-align:left">';
-        print_r($filesArr);
-        print '</pre>';
         $this->view->files = $filesArr;
     }
 }
